@@ -15,6 +15,8 @@ client.commands = new Collection();
 client.commandArray = [];
 // Initialize a collection to store buttons.
 client.buttons = new Collection();
+// Initialize a collection to store select menus.
+client.selectMenus = new Collection();
 
 // Read the functions directory to dynamically load function files
 const functionFolders = fs.readdirSync('./functions');

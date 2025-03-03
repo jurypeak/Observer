@@ -15,7 +15,7 @@ module.exports = (client) => {
             );
 
             // Destructure 'buttons' from the client object
-            const { buttons } = client;
+            const { buttons, selectMenus } = client;
 
             // Use a switch statement to handle different component types
             switch (folder) {
@@ -27,6 +27,13 @@ module.exports = (client) => {
                         // Add the button to the buttons collection using its name as the key
                         // This is where the error occurs if 'buttons' is undefined
                         buttons.set(button.data.name, button);
+                    }
+                    break;
+
+                case "selectMenus":
+                    for (const file of componentFiles) {
+                        const menu = require(`../../components/${folder}/${file}`);
+                        selectMenus.set(menu.data.name, menu);
                     }
                     break;
 

@@ -7,7 +7,7 @@
     "test": "node ."
   },
   "keywords": [],
-  "author": "jxmesak",
+  "author": "jxmesak, pyroxill",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

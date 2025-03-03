@@ -24,7 +24,7 @@ module.exports = (client) => {
 
         // Define the bot's client ID and the server (guild) ID
         const clientID = '1186306625259184279';
-        const guildID = '714242180939645008';
+        const guildID = '1346142993656184983';
 
         // Create a new REST instance with the bot token
         const rest = new REST({ version: '9' })

@@ -1,7 +1,8 @@
 // Load environment variables from .env file
-require("dotenv").config();
+require('dotenv').config();
 // Retrieve the Discord bot token from environment variables
-const { token } = process.env.DISCORD_TOKEN;
+const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
+const { connect } = require("mongoose");
 // Import necessary classes from discord.js library
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 // Import the file system module to read directories and files
@@ -38,4 +39,8 @@ client.handleCommands();
 client.handleComponents();
 
 // Log in to Discord using the bot token
-client.login(process.env.DISCORD_TOKEN);
+client.login(DISCORD_TOKEN);
+(async () => {
+    await connect(MONGO_TOKEN).catch(console.error);
+    console.log("MongoDB URI:", DISCORD_TOKEN); // Debugging
+})();

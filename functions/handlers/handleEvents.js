@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { connection } = require('mongoose');
 
 // Function to handle loading and registering events
 module.exports = (client) => {
@@ -19,6 +20,17 @@ module.exports = (client) => {
                         // If the event should be executed only once, use .once(), otherwise use .on()
                         if (event.once) client.once(event.name, (...args) => event.execute(...args, client));
                         else client.on(event.name, (...args) => event.execute(...args, client));
+                    }
+                    break;
+                case "mongo":
+                    for (const file of eventFiles) {
+                        const event = require(`../../events/${folder}/${file}`);
+                        if (event.once) connection.once(event.name, (...args) =>
+                            event.execute(...args, client)
+                        );
+                        else connection.on(event.name, (...args) =>
+                            event.execute(...args, client)
+                        );
                     }
                     break;
                 default:

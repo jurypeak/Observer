@@ -8,7 +8,13 @@ const { Client, Collection, GatewayIntentBits } = require("discord.js");
 // Import the file system module to read directories and files
 const fs = require("fs");
 // Create a new Discord client instance with specified gateway intents
-const client = new Client({ intents: GatewayIntentBits.Guilds });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ],
+});
 
 // Initialize a collection to store bot commands
 client.commands = new Collection();

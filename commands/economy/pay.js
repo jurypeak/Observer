@@ -1,4 +1,4 @@
-const { SlashCommandBuilder} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder} = require("discord.js");
 const Balance = require("../../schemas/balance");
 
 module.exports = {
@@ -29,14 +29,13 @@ module.exports = {
             ephemeral: true
         });
         else if (amount < 1.00) return await interaction.reply({
-            content: `The amount must be at least $1.00!`,
+            content: `The amount must be at least 1.00 credit!`,
             ephemeral: true
         })
         else if (amount > userStoredBalance) return await interaction.reply({
-            content: `You do not have enough money to pay that amount!`,
+            content: `You do not have enough credits to pay that amount!`,
             ephemeral: true
         });
-
         const selectedUserBalance = await client.fetchBalance(
             selectedUser.id,
             interaction.guild.id
@@ -49,15 +48,39 @@ module.exports = {
             {
                 balance: await client.toFixedNumber(userStoredBalance.balance - amount)
             });
-
         await Balance.findOneAndUpdate(
             { _id: selectedUserBalance._id },
             {
                 balance: await client.toFixedNumber(selectedUserBalance.balance + amount)
             });
+        let url;
+        const embed = new EmbedBuilder()
+            .setColor('#FF5555') // Vibrant red
+            .setTitle(`Transfer Summary`)
+            .setDescription(`**You've successfully claimed your daily credits!**`)
+            .setThumbnail(url = "attachment://cryptologo.png")
+            .addFields([
+                {
+                    name: '💰 Credits Sent',
+                    sender: `${interaction.user.username}`,
+                    value: `**${amount}** credits have been removed from your balance!`,
+                    inline: false
+                },
+                {
+                    name: '⏱️ Credits Received',
+                    receiver: `${selectedUser.username}`,
+                    value: `**${amount}** have been added to your balance!`, // Discord timestamp format
+                    inline: false
+                }
+            ])
+            .setFooter({
+                text: `${client.user.username} | Economy System`,
+                iconURL: client.user.avatarURL()
+            })
+            .setTimestamp();
 
         await interaction.reply({
-            content: `You've sent $${amount} to ${selectedUser.tag}!`,
+            embeds: [embed],
             ephemeral: true
         });
     },

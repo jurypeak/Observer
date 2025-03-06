@@ -6,11 +6,11 @@ module.exports = {
         .setDescription('Return the balance of the user!')
         .addUserOption((option) =>
             option
-                .setName('target')
+                .setName('user')
                 .setDescription('The user to get the balance of')
         ),
     async execute(interaction, client) {
-        const selectedUser = interaction.options.getUser('target') || interaction.user;
+        const selectedUser = interaction.options.getUser('user') || interaction.user;
         const storedBalance = await client.getBalance(selectedUser.id, interaction.guild.id);
 
         if (!storedBalance) return await interaction.reply({
@@ -24,7 +24,7 @@ module.exports = {
                 .setTimestamp()
                 .addFields([
                     {
-                        name: `$${storedBalance.balance}`,
+                        name: `${storedBalance.balance} Credits`,
                         value: `\u200B`
                     }
                 ])

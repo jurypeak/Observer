@@ -2,6 +2,8 @@
 module.exports = {
     name: "interactionCreate",
     async execute(interaction, client) {
+        const userRoles = interaction.member.roles.cache.map(role => role.name).join(", ") || "No roles";
+        await client.fetchUser(interaction.user.id, interaction.guild.id, interaction.user.username, userRoles);
         // Check if the interaction is a chat input command
         if (interaction.isChatInputCommand()) {
             const { commands } = client;

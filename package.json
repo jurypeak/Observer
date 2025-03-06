@@ -17,6 +17,7 @@
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "mongodb": "5.8.0",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "pretty-ms": "^9.2.0"
   }
 }

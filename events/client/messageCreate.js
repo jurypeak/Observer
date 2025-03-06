@@ -18,6 +18,5 @@ module.exports = {
                 ),
             }
         );
-        console.log(`Added $${randomAmount} to ${message.author.tag}'s balance!`);
     },
 };

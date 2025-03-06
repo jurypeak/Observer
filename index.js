@@ -11,6 +11,7 @@ const fs = require("fs");
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
     ],
@@ -43,10 +44,10 @@ for (const folder of functionFolders) {
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
+client.updateUsers
 
 // Log in to Discord using the bot token
 client.login(DISCORD_TOKEN);
 (async () => {
     await connect(MONGO_TOKEN).catch(console.error);
-    console.log("MongoDB URI:", DISCORD_TOKEN); // Debugging
 })();

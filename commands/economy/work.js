@@ -18,33 +18,28 @@ module.exports = {
             "Space Chef", "Space Tourist", "Space Station Janitor"
         ];
 
-        // Fetch user balance and cooldown
         const storedBalance = await client.fetchBalance(user.id, interaction.guild.id);
         const workCooldown = await client.fetchCooldown(user.id, interaction.guild.id, 'work');
 
         await interaction.deferReply({ ephemeral: true });
 
-        // Check if the cooldown is still active
         if (workCooldown && Date.now() < workCooldown.endsAt) {
             const timeRemaining = prettyMs(workCooldown.endsAt - Date.now());
             await interaction.editReply(`<@${user.id}> You can work for credits again in ${timeRemaining}`);
             return;
         }
 
-        // Update or set new cooldown expiration time
         const newCooldownExpiration = Date.now() + 86400000; // 24 hours cooldown
         await Cooldown.updateOne(
             { userID: user.id, guildID: interaction.guild.id, command: 'work' },
             { endsAt: newCooldownExpiration }
         );
 
-        // Update user's balance by adding the random amount
         await Balance.findOneAndUpdate(
             { _id: storedBalance._id },
             { balance: await client.toFixedNumber(storedBalance.balance + randomAmount) }
         );
 
-        // Create the response embed
         const embed = new EmbedBuilder()
             .setColor('#FF5555') // Vibrant red
             .setTitle(`Your Work Pay`)
@@ -73,7 +68,6 @@ module.exports = {
             })
             .setTimestamp();
 
-        // Send the response
         await interaction.editReply({
             embeds: [embed],
         });

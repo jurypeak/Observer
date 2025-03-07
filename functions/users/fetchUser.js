@@ -21,7 +21,6 @@ module.exports = (client) => {
             await user.save().catch(console.error);
             return user;
         } else {
-            // If user is found, update the name and roles
             user.name = name;
             // Save the updated user and return the user object
             await user.save().catch(console.error);

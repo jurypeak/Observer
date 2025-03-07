@@ -23,26 +23,22 @@ module.exports = {
             return;
         }
 
-        // Update the user's balance
         await Balance.findOneAndUpdate(
             { _id: storedBalance._id },
             { balance: await client.toFixedNumber(storedBalance.balance + randomAmount) }
         );
 
-        // Set the new cooldown expiration time (24 hours)
-        const newCooldownExpiration = Date.now() + 2000; // 24 hours cooldown in ms
+        const newCooldownExpiration = Date.now() + 86400000; // 24 hours cooldown in ms
         await Cooldown.updateOne(
             { userID: user.id, guildID: interaction.guild.id, command: 'daily' },
             { endsAt: newCooldownExpiration }
         );
 
-        // Increment the daily streak
         const updatedUser = await User.updateOne(
-            { userID: user.id, guildID: interaction.guild.id }, // Find user by userID and guildID
-            { $inc: { dailyStreak: 1 } } // Increment dailyStreak by 1 using $inc
+            { userID: user.id, guildID: interaction.guild.id },
+            { $inc: { dailyStreak: 1 } } 
         );
 
-        // Embed response
         const embed = new EmbedBuilder()
             .setColor('#FF5555') // Vibrant red
             .setTitle(`Your Daily Reward`)

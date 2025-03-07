@@ -10,7 +10,7 @@ module.exports = {
 
         const commandsPerPage = 5; // Number of commands per page
         const totalPages = Math.ceil(commands.length / commandsPerPage);
-        let currentPage = 1;
+        let currentPage = 0;
 
         const embed = (page) => {
             const start = page * commandsPerPage;

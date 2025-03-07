@@ -1,30 +1,90 @@
-// Discord help command to display a help menu.
-// Author: Jayden Robertson (Proxill)
-// Created: 04/03/2025
-// Last modified: 04/03/2025
-
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 
 module.exports = {
-    data: new SlashCommandBuilder() //Creating a help slash command
+    data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Observer help guide, provides list available commands.'),
-        
-        async execute(interaction, client) {
-        const embed = new EmbedBuilder() //Creating help embed message
-            .setTitle(`Help Menu`)
-            .setDescription(`Here are the available commands:`)
-            .setColor(`#EFBF04`)
-            .setThumbnail(client.user.displayAvatarURL())
-            .setTimestamp(Date.now());
-            
-        // Loop through all the commands and add them to the embed
-        client.commands.forEach(command => {
-            embed.addFields({name:  `**${command.data.name}**`, value: command.data.description, inline: true });
+
+    async execute(interaction, client) {
+        const commands = client.commands.map(command => command.data);
+
+        const commandsPerPage = 5; // Number of commands per page
+        const totalPages = Math.ceil(commands.length / commandsPerPage);
+        let currentPage = 1;
+
+        const embed = (page) => {
+            const start = page * commandsPerPage;
+            const end = Math.min(start + commandsPerPage, commands.length);
+            const commandPage = commands.slice(start, end);
+
+            const embed = new EmbedBuilder()
+                .setTitle(`Help Menu`)
+                .setDescription(`🔖  Use /command_name to execute commands!`)
+                .setColor('#FF5555')
+                .setThumbnail(client.user.displayAvatarURL())
+                .setFooter({
+                    text: `Page ${page + 1} of ${totalPages}`,
+                    iconURL: client.user.displayAvatarURL(),
+                })
+                .setTimestamp();
+
+            commandPage.forEach(command => {
+                embed.addFields({ name: `**${command.name}**`, value: command.description, inline: false });
+            });
+
+            return embed;
+        };
+
+        const prevButton = new ButtonBuilder()
+            .setCustomId('prev')
+            .setLabel('Previous')
+            .setStyle('1')
+            .setDisabled(currentPage === 0);
+
+        const nextButton = new ButtonBuilder()
+            .setCustomId('next')
+            .setLabel('Next')
+            .setStyle('1')
+            .setDisabled(currentPage === totalPages - 1);
+
+        const buttonRow = new ActionRowBuilder().addComponents(prevButton, nextButton);
+
+        await interaction.deferReply();
+
+        await interaction.editReply({
+            embeds: [embed(currentPage)],
+            components: [buttonRow],
         });
 
-        await interaction.reply({
-            embeds: [embed]
+        const filter = (interaction) => interaction.user.id === interaction.user.id;
+        const collector = interaction.channel.createMessageComponentCollector({
+            filter,
+            time: 60000,
+        });
+
+        collector.on('collect', async (i) => {
+            if (i.customId === 'next') {
+                currentPage++;
+            } else if (i.customId === 'prev') {
+                currentPage--;
+            }
+
+            prevButton.setDisabled(currentPage === 0);
+            nextButton.setDisabled(currentPage === totalPages - 1);
+
+            await i.update({
+                embeds: [embed(currentPage)],
+                components: [new ActionRowBuilder().addComponents(prevButton, nextButton)],
+            });
+        });
+
+        collector.on('end', () => {
+            prevButton.setDisabled(true);
+            nextButton.setDisabled(true);
+
+            interaction.editReply({
+                components: [new ActionRowBuilder().addComponents(prevButton, nextButton)],
+            });
         });
     },
 };

@@ -53,23 +53,22 @@ module.exports = {
             {
                 balance: await client.toFixedNumber(selectedUserBalance.balance + amount)
             });
-        let url;
         const embed = new EmbedBuilder()
-            .setColor('#FF5555') // Vibrant red
-            .setTitle(`Transfer Summary`)
-            .setDescription(`**You've successfully claimed your daily credits!**`)
-            .setThumbnail(url = "attachment://cryptologo.png")
+            .setColor('#FF5555')
+            .setTitle(`Your Transfer Summary`)
+            .setDescription(`**You've successfully transferred your credits!**`)
+            .setThumbnail("attachment://cryptologo.png")
             .addFields([
                 {
-                    name: '💰 Credits Sent',
+                    name: '📉  Credits Sent',
                     sender: `${interaction.user.username}`,
-                    value: `**${amount}** credits have been removed from your balance!`,
+                    value: `**${amount}** credits have been removed from <@${interaction.user.id}>'s balance!`,
                     inline: false
                 },
                 {
-                    name: '⏱️ Credits Received',
+                    name: '📈  Credits Received',
                     receiver: `${selectedUser.username}`,
-                    value: `**${amount}** have been added to your balance!`, // Discord timestamp format
+                    value: `**${amount}** credits has been added to ${selectedUser}'s balance!`,
                     inline: false
                 }
             ])
@@ -81,6 +80,10 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
+            files: [{
+                attachment: "cryptologo.png",
+                name: "cryptologo.png"
+            }],
             ephemeral: true
         });
     },

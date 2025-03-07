@@ -49,5 +49,5 @@ client.updateUsers
 // Log in to Discord using the bot token
 client.login(DISCORD_TOKEN);
 (async () => {
-    await connect(MONGO_TOKEN, {serverSelectionTimeoutMS: 5000}).catch(console.error);
+    await connect(MONGO_TOKEN, {serverSelectionTimeoutMS: 30000, socketTimeoutMS: 45000}).catch(console.error);
 })();

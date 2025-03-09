@@ -62,13 +62,13 @@ module.exports = {
                 {
                     name: '📉  Credits Sent',
                     sender: `${interaction.user.username}`,
-                    value: `**${amount}** credits have been removed from <@${interaction.user.id}>'s balance!`,
+                    value: `**${amount.toLocaleString()}** credits have been removed from <@${interaction.user.id}>'s balance!`,
                     inline: false
                 },
                 {
                     name: '📈  Credits Received',
                     receiver: `${selectedUser.username}`,
-                    value: `**${amount}** credits has been added to ${selectedUser}'s balance!`,
+                    value: `**${amount.toLocaleString()}** credits has been added to ${selectedUser}'s balance!`,
                     inline: false
                 }
             ])

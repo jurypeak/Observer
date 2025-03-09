@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+
 const cooldownSchema = new Schema({
     _id: Schema.Types.ObjectId,
     userID: String,

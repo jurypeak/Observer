@@ -33,6 +33,12 @@ module.exports = (client) => {
                         );
                     }
                     break;
+                case "joins": //
+                    for (const file of eventFiles) {
+                        const event = require(`../../events/${folder}/${file}`);
+                        client.on(event.name, (...args) => event.execute(...args, client));
+                    }
+                    break;
                 default:
                     break;
             }

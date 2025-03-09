@@ -24,7 +24,7 @@ module.exports = {
                 .setTimestamp()
                 .addFields([
                     {
-                        name: `${storedBalance.balance} Credits`,
+                        name: `${storedBalance.balance.toLocaleString()} Credits`,
                         value: `\u200B`
                     }
                 ])

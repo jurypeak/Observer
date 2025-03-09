@@ -5,6 +5,10 @@ const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
 const { connect } = require("mongoose");
 // Import necessary classes from discord.js library
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
+const { DisTube } = require("distube");
+const { YtDlpPlugin } = require("@distube/yt-dlp"); // Use yt-dlp for better support
+const { SoundCloudPlugin } = require("@distube/soundcloud");
+const { SpotifyPlugin } = require("@distube/spotify");
 // Import the file system module to read directories and files
 const fs = require("fs");
 // Create a new Discord client instance with specified gateway intents
@@ -13,8 +17,13 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildVoiceStates
     ],
+});
+
+client.disTube = new DisTube(client, {
+    plugins: [new YtDlpPlugin(), new SoundCloudPlugin(), new SpotifyPlugin()]
 });
 
 // Initialize a collection to store bot commands
@@ -44,8 +53,7 @@ for (const folder of functionFolders) {
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
-client.updateUsers
-
+client.updateUsers;
 // Log in to Discord using the bot token
 client.login(DISCORD_TOKEN);
 (async () => {

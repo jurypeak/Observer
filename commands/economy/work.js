@@ -48,7 +48,7 @@ module.exports = {
             .addFields([
                 {
                     name: '💰  Credits Received',
-                    value: `**${randomAmount.toFixed(2)}** credits have been added to your balance!`,
+                    value: `**${randomAmount.toFixed(2).toLocaleString()}** credits have been added to your balance!`,
                     inline: true
                 },
                 {

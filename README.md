@@ -1,4 +1,4 @@
-# Observer <img src="https://github.com/jurypeak/Observer/blob/master/logo.png" width="50" align="left">
+# Observer <img src="https://github.com/jurypeak/Observer/blob/master/logo.png" width="42" align="left">
 
 Observer is a Discord bot project developed by jurypeak and pyroxill to be implemented and used in our discord server.
 

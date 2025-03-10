@@ -15,6 +15,7 @@ module.exports = (client) => {
                 userID: userId,
                 guildID: guildId,
                 name: name,
+                lastClaimedDaily: new Date(),
                 dailyStreak: 0,  // Initialize dailyStreak to 0
             });
             // Save the new user and return the user object

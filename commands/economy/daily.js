@@ -28,7 +28,7 @@ module.exports = {
         }
 
         let newStreak = userProfile.dailyStreak + 1;
-        if (userProfile.lastClaimedAt && now - userProfile.lastClaimedAt > twoDays) {
+        if (userProfile.lastClaimedDaily && now - userProfile.lastClaimedDaily > twoDays) {
             newStreak = 1;
         }
 
@@ -45,7 +45,7 @@ module.exports = {
 
         await User.updateOne(
             { userID: user.id, guildID: interaction.guild.id },
-            { $set: { lastClaimedAt: now, dailyStreak: newStreak } }
+            { $set: { lastClaimedDaily: now, dailyStreak: newStreak } }
         );
 
         const embed = new EmbedBuilder()

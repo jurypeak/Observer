@@ -3,15 +3,17 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Play music in a voice channel!')
+        .setDescription('Play a song in the voice channel!')
         .addStringOption(option =>
             option.setName('song')
                 .setDescription('The song name or URL to play')
-                .setRequired(true)
         ),
+
     async execute(interaction, client) {
         const song = interaction.options.getString('song');
         const voiceChannel = interaction.member.voice.channel;
+        const queue = client.disTube.getQueue(voiceChannel);
+        await interaction.deferReply();
 
         if (!voiceChannel) {
             return interaction.reply({
@@ -20,7 +22,22 @@ module.exports = {
             });
         }
 
-        await interaction.deferReply();
+        if (queue && queue.paused) {
+            await queue.resume();
+            await interaction.editReply({
+                content: '⏯️ Resumed the queue and now playing the new song!',
+            });
+            return;
+        }
+
+        const regex = /^(https:\/\/(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)[\w\-]+|youtu\.be\/[\w\-]+)|https:\/\/soundcloud\.com\/[\w\-]+(?:\/[\w\-]+)?)$/;
+
+        if (!regex.test(song)) {
+            return interaction.editReply({
+                content: '❌ Invalid URL! Only YouTube and SoundCloud links are allowed.',
+                ephemeral: true
+            });
+        }
 
         try {
             await client.disTube.play(voiceChannel, song, {
@@ -28,8 +45,10 @@ module.exports = {
                 member: interaction.member
             });
 
+            client.lastPlayedSong = song;
+
             await interaction.editReply({
-                content: `🎶 Playing **${song}** in **${voiceChannel.name}**!`,
+                content: `🎶 Now playing **${song}** in **${voiceChannel.name}**!`,
             });
         } catch (error) {
             console.error(error);
@@ -39,3 +58,6 @@ module.exports = {
         }
     },
 };
+
+
+

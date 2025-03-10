@@ -18,7 +18,8 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildVoiceStates
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessageReactions,
     ],
 });
 
@@ -53,7 +54,6 @@ for (const folder of functionFolders) {
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
-client.updateUsers;
 // Log in to Discord using the bot token
 client.login(DISCORD_TOKEN);
 (async () => {

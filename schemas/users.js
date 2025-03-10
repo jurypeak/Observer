@@ -5,6 +5,7 @@ const userSchema = new Schema({
     userID: { type: String, required: true },
     guildID: { type: String, required: true },
     name: String,
+    lastClaimedDaily: { type: Date, default: new Date() },
     dailyStreak: { type: Number, default: 0 },
 });
 

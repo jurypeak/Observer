@@ -2,7 +2,7 @@
 
 Observer is a Discord bot project developed by jurypeak and pyroxill to be implemented and used in our discord server.
 
-## Features
+## 🗒️ Features
 
 - **Command Handling**: Organized command structure for scalability.
 - **Event Handling**: Efficient event management for responsive interactions.
@@ -10,7 +10,7 @@ Observer is a Discord bot project developed by jurypeak and pyroxill to be imple
 - **Database Integration**: Schemas for structured data management.
 - **Multimedia Support**: Includes images and GIFs for enriched user engagement.
 
-## Installation
+## 🏗️ Installation
 
 To set up the Observer bot locally, follow these steps:
 
@@ -32,12 +32,11 @@ To set up the Observer bot locally, follow these steps:
    npm install
    ```
 
-## Usage
+## ℹ️ Usage
 
 1. **Configure the bot**:
 
-   - Rename `.env.example` to `.env`.
-   - Add your Discord bot token and other necessary configurations in the `.env` file.
+   - Add your Discord bot token and other necessary configurations in a `.env` file.
 
 2. **Start the bot**:
 
@@ -49,7 +48,7 @@ To set up the Observer bot locally, follow these steps:
 
    - Use defined commands and observe event responses in your Discord server.
 
-## Contributing
+## ❤️ Contributing
 
 Contributions are welcome! To contribute:
 
@@ -59,6 +58,6 @@ Contributions are welcome! To contribute:
 4. Push to the branch (`git push origin feature/YourFeature`).
 5. Open a pull request.
 
-## License
+## 🚨 License
 
 This project is licensed under the MIT License.

@@ -1,5 +1,5 @@
 const welcomeChannelSchema = require('../../schemas/welcome');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'send-welcome-message',
@@ -10,7 +10,7 @@ module.exports = {
             const welcomeConfigs = await welcomeChannelSchema.find({ guildID: member.guild.id });
 
             if (!welcomeConfigs.length) {
-                console.log("No welcome configuration found.");
+                console.log("No welcome configuration found for guild:", member.guild.id);
                 return;
             }
 
@@ -24,20 +24,24 @@ module.exports = {
                     return;
                 }
 
-                const welcomeEmbed = new MessageEmbed()
+                const welcomeEmbed = new EmbedBuilder()
                     .setColor('#a11111')
                     .setTitle('Hello, Welcome to Astral')
                     .setDescription(`<@${member.user.id}> \nPlease wait to be verified into the server. If you have been provided a security password, type it in channel <#1348419021707546704> to gain access.`)
                     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-                    .addFields('Channel', member.user.username, true)
-                    .addFields('Members', `${member.guild.memberCount}`, true)
+                    .addFields(
+                        { name: 'Channel', value: member.user.username, inline: true },
+                        { name: 'Members', value: `${member.guild.memberCount}`, inline: true }
+                    )
                     .setTimestamp()
-                    .setFooter(`Joined at ${new Date().toLocaleString('en-GB', { timeZone: 'UTC' })}`);
+                    .setFooter({ text: `Joined at ${new Date().toLocaleString('en-GB', { timeZone: 'UTC' })}` });
 
-                targetChannel.send({ embeds: [welcomeEmbed] }).catch((error) => console.error("Error sending message:", error));
+                await targetChannel.send({ embeds: [welcomeEmbed] }).catch((error) => {
+                    console.error("Error sending message:", error);
+                });
             }
         } catch (error) {
-            console.error(error);
+            console.error("Unexpected error:", error);
         }
     }
 };

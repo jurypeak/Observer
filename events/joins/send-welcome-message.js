@@ -1,4 +1,5 @@
 const welcomeChannelSchema = require('../../schemas/welcome');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'send-welcome-message',
@@ -14,7 +15,6 @@ module.exports = {
             }
 
             for (const welcomeConfig of welcomeConfigs) {
-
                 const targetChannel =
                     member.guild.channels.cache.get(welcomeConfig.channelID) ||
                     await member.guild.channels.fetch(welcomeConfig.channelID).catch(() => null);
@@ -24,15 +24,17 @@ module.exports = {
                     return;
                 }
 
-                const customMessage = welcomeConfig.customMessage ||
-                    'Welcome {username} to {server-name}!';
+                const welcomeEmbed = new MessageEmbed()
+                    .setColor('#a11111')
+                    .setTitle('Hello, Welcome to Astral')
+                    .setDescription(`<@${member.user.id}> \nPlease wait to be verified into the server. If you have been provided a security password, type it in channel <#1348419021707546704> to gain access.`)
+                    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                    .addFields('Channel', member.user.username, true)
+                    .addFields('Members', `${member.guild.memberCount}`, true)
+                    .setTimestamp()
+                    .setFooter(`Joined at ${new Date().toLocaleString('en-GB', { timeZone: 'UTC' })}`);
 
-                const welcomeMessage = customMessage
-                    .replace(`{username}`, member.user.username)
-                    .replace(`{server-name}`, member.guild.name)
-                    .replace(`{mention-member}`, `<@${member.user.id}>`);
-
-                targetChannel.send(welcomeMessage).catch((error) => console.error("Error sending message:", error));
+                targetChannel.send({ embeds: [welcomeEmbed] }).catch((error) => console.error("Error sending message:", error));
             }
         } catch (error) {
             console.error(error);

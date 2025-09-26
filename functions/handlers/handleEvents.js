@@ -36,6 +36,7 @@ module.exports = (client) => {
                 case "joins":
                 case "commands":
                 case "messages":
+                case "voice":
                     for (const file of eventFiles) {
                         const event = require(`../../events/${folder}/${file}`);
                         client.on(event.name, (...args) => event.execute(...args, client));

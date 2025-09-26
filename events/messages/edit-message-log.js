@@ -10,8 +10,8 @@ const GuildConfig = require('../../schemas/guildconfig');
 module.exports = {
     name: Events.MessageUpdate,
     async execute(oldMessage, newMessage) {
-        // Ignore DMs, bots, or if content didn't change
-        if (!oldMessage.guild || !oldMessage.content || oldMessage.author.bot) return;
+        // Ignore DMs, bots, or unchanged content
+        if (!oldMessage.guild || oldMessage.author?.bot) return;
         if (oldMessage.content === newMessage.content) return;
 
         try {
@@ -19,11 +19,11 @@ module.exports = {
             const config = await GuildConfig.findOne({ guildID: oldMessage.guild.id });
             if (!config || !config.logChannel) return;
 
-            // Fetch the log channel
+            // Fetch log channel
             const logChannel = await oldMessage.guild.channels.fetch(config.logChannel).catch(() => null);
             if (!logChannel) return;
 
-            // Handle attachments
+            // Prepare attachment info
             const oldAttachments = oldMessage.attachments.size
                 ? oldMessage.attachments.map(att => att.url).join('\n')
                 : 'No Attachments';
@@ -32,9 +32,9 @@ module.exports = {
                 ? newMessage.attachments.map(att => att.url).join('\n')
                 : 'No Attachments';
 
-            // Build the log embed
+            // Create embed
             const embed = new EmbedBuilder()
-                .setColor('#FFA500')
+                .setColor('#FFA500') // Orange for edits
                 .setTitle('✏️ Message Edited')
                 .setDescription(`A message was edited in **${oldMessage.guild.name}**`)
                 .addFields(
@@ -48,11 +48,11 @@ module.exports = {
                 .setTimestamp()
                 .setFooter({ text: `Message ID: ${oldMessage.id}` });
 
-            // Send embed to log channel
+            // Send embed
             await logChannel.send({ embeds: [embed] });
 
         } catch (error) {
-            console.error(`Error in edit-message-log event: ${error}`);
+            console.error(`Error logging edited message: ${error}`);
         }
     }
 };

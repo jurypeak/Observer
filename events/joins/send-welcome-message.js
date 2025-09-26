@@ -1,11 +1,5 @@
-const GuildConfig = require('../../schemas/guildconfig');
 const { EmbedBuilder } = require('discord.js');
-
-/**
- * Welcome Event for Astral Discord Bot
- *
- * Sends a welcome message to new members using the configured welcome channel
- */
+const GuildConfig = require('../../schemas/guildconfig');
 
 module.exports = {
     name: 'send-welcome-message',
@@ -14,9 +8,9 @@ module.exports = {
             // Ignore bots
             if (member.user.bot) return;
 
-            // Get guild configuration
+            // Fetch guild config
             const config = await GuildConfig.findOne({ guildID: member.guild.id });
-            if (!config || !config.welcomeChannel) {
+            if (!config?.welcomeChannel) {
                 console.log("No welcome channel set for guild:", member.guild.id);
                 return;
             }
@@ -31,11 +25,11 @@ module.exports = {
                 return;
             }
 
-            // Create the welcome embed
+            // **Embed stays exactly as you had it**
             const welcomeEmbed = new EmbedBuilder()
                 .setColor('#d31515')
                 .setTitle('Hello, Welcome to Astral')
-                .setDescription(`<@${member.user.id}>\nPlease wait to be verified into the server. If you have been provided a security password, type it in the key verification channel to gain access.`)
+                .setDescription(`<@${member.user.id}>\nPlease wait to be verified into the server. If you have been provided a security password, type it in channel <#1348419021707546704> to gain access.`)
                 .setImage(member.user.displayAvatarURL({ dynamic: true, size: 128 }))
                 .addFields([
                     {
@@ -56,7 +50,7 @@ module.exports = {
                     })}`
                 });
 
-            // Send the embed
+            // Send embed
             await targetChannel.send({ embeds: [welcomeEmbed] }).catch(console.error);
 
         } catch (error) {

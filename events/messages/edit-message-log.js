@@ -1,58 +1,35 @@
 const { Events, EmbedBuilder } = require('discord.js');
 const GuildConfig = require('../../schemas/guildconfig');
 
-/**
- * Edit message Event for Astral Discord Bot
- *
- * Sends an embed for any edited messages
- */
-
 module.exports = {
     name: Events.MessageUpdate,
     async execute(oldMessage, newMessage) {
-        // Ignore DMs, bots, or unchanged content
         if (!oldMessage.guild || oldMessage.author?.bot) return;
         if (oldMessage.content === newMessage.content) return;
 
         try {
-            // Fetch guild configuration
             const config = await GuildConfig.findOne({ guildID: oldMessage.guild.id });
-            if (!config || !config.logChannel) return;
+            if (!config?.logChannel) return;
 
-            // Fetch log channel
             const logChannel = await oldMessage.guild.channels.fetch(config.logChannel).catch(() => null);
             if (!logChannel) return;
 
-            // Prepare attachment info
-            const oldAttachments = oldMessage.attachments.size
-                ? oldMessage.attachments.map(att => att.url).join('\n')
-                : 'No Attachments';
-
-            const newAttachments = newMessage.attachments.size
-                ? newMessage.attachments.map(att => att.url).join('\n')
-                : 'No Attachments';
-
-            // Create embed
             const embed = new EmbedBuilder()
-                .setColor('#FFA500') // Orange for edits
+                .setColor('#FFA500')
                 .setTitle('✏️ Message Edited')
-                .setDescription(`A message was edited in **${oldMessage.guild.name}**`)
                 .addFields(
-                    { name: 'Author', value: `<@${oldMessage.author.id}> (\`${oldMessage.author.id}\`)`, inline: false },
-                    { name: 'Channel', value: `<#${oldMessage.channel.id}>`, inline: false },
-                    { name: 'Before', value: oldMessage.content || 'No Content', inline: false },
-                    { name: 'After', value: newMessage.content || 'No Content', inline: false },
-                    { name: 'Old Attachments', value: oldAttachments, inline: false },
-                    { name: 'New Attachments', value: newAttachments, inline: false }
+                    { name: 'Author', value: `<@${oldMessage.author.id}> (\`${oldMessage.author.id}\`)` },
+                    { name: 'Channel', value: `<#${oldMessage.channel.id}>` },
+                    { name: 'Before', value: oldMessage.content || 'No Content' },
+                    { name: 'After', value: newMessage.content || 'No Content' }
                 )
                 .setTimestamp()
                 .setFooter({ text: `Message ID: ${oldMessage.id}` });
 
-            // Send embed
             await logChannel.send({ embeds: [embed] });
 
-        } catch (error) {
-            console.error(`Error logging edited message: ${error}`);
+        } catch (err) {
+            console.error('Error logging edited message:', err);
         }
     }
 };

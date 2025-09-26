@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder } = require('discord.js');
-const GuildConfig = require('../../schemas/GuildConfig');
+const GuildConfig = require('../../schemas/guildconfig');
 
 /**
  * Edit message Event for Astral Discord Bot

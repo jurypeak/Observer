@@ -20,7 +20,8 @@ module.exports = {
             return interaction.editReply("User is not in the server or could not be fetched.");
         }
 
-        client.emit('send-welcome-message', member);
+        // Emit the real Discord event so the same logic runs as a real member joining
+        client.emit('guildMemberAdd', member);
 
         await interaction.editReply(`Simulated <@${member.id}> joining the server!`);
     }

@@ -10,8 +10,10 @@ const CHANNEL_FIELDS = {
     key: 'keyChannel'
 };
 
-function replyEphemeral(interaction, content, embed) {
-    return interaction.reply({ content, embeds: embed ? [embed] : undefined, flags: 64 });
+function reply(interaction, content, embed, options = {}) {
+    // Default to non-ephemeral so the message persists in the channel unless explicitly requested
+    const payload = { content, embeds: embed ? [embed] : undefined, ...options };
+    return interaction.reply(payload);
 }
 
 module.exports = {
@@ -104,7 +106,7 @@ module.exports = {
                     .setFooter({ text: `${interaction.client.user.username} | Setup System`, iconURL: interaction.client.user.displayAvatarURL() })
                     .setTimestamp();
 
-                return replyEphemeral(interaction, null, embed);
+                return reply(interaction, null, embed);
             }
 
             // Update channel
@@ -112,12 +114,12 @@ module.exports = {
                 const channel = interaction.options.getChannel('channel');
                 config[CHANNEL_FIELDS[sub]] = channel.id;
                 await config.save();
-                return replyEphemeral(interaction, `✅ ${sub.replace(/-/g, ' ')} set → ${channel}`);
+                return reply(interaction, `✅ ${sub.replace(/-/g, ' ')} set → ${channel}`);
             }
 
         } catch (err) {
             console.error(err);
-            return replyEphemeral(interaction, 'An error occurred while running setup.');
+            return reply(interaction, 'An error occurred while running setup.', null, { ephemeral: true });
         }
     }
 };

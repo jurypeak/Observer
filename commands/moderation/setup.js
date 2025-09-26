@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder } = require("discord.js");
-const GuildConfig = require("../../schemas/guildConfig");
+const GuildConfig = require("../../schemas/guildconfig");
 
 /**
  * Setup Command for Astral Discord Bot

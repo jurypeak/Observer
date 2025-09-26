@@ -1,4 +1,4 @@
-const GuildConfig = require('../../schemas/GuildConfig');
+const GuildConfig = require('../../schemas/guildConfig');
 const { EmbedBuilder } = require('discord.js');
 
 /**
